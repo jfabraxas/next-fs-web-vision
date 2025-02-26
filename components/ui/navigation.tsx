@@ -1,49 +1,76 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import * as React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import {
-  MessageSquare,
-  HardDrive,
-  Settings,
-  Brain,
-  Home,
-} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/lib/theme/ThemeToggle';
+import { ChefHat as Chat, Settings, Database, FileText, Home } from 'lucide-react';
 
-const navigation = [
-  { name: 'Home', href: '/', icon: Home },
-  { name: 'Chat', href: '/chat', icon: MessageSquare },
-  { name: 'Storage', href: '/storage', icon: HardDrive },
-  { name: 'Knowledge', href: '/knowledge', icon: Brain },
-  { name: 'Settings', href: '/settings', icon: Settings },
-];
+interface NavItemProps {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  isActive: boolean;
+}
+
+function NavItem({ href, icon, label, isActive }: NavItemProps) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        'flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground',
+        isActive && 'bg-accent text-accent-foreground'
+      )}
+      title={label}
+    >
+      {icon}
+      <span className="sr-only">{label}</span>
+    </Link>
+  );
+}
 
 export function Navigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed left-0 top-0 z-40 h-full w-16 bg-white shadow-lg">
-      <div className="flex h-full flex-col items-center justify-start space-y-4 py-4">
-        {navigation.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                'flex h-12 w-12 items-center justify-center rounded-lg transition-colors hover:bg-gray-100',
-                pathname === item.href
-                  ? 'bg-gray-100 text-blue-600'
-                  : 'text-gray-600'
-              )}
-              title={item.name}
-            >
-              <Icon className="h-6 w-6" />
-            </Link>
-          );
-        })}
+    <aside className="fixed inset-y-0 left-0 z-10 flex w-16 flex-col items-center justify-between border-r bg-background py-4">
+      <div className="space-y-4">
+        <NavItem
+          href="/"
+          icon={<Home className="h-5 w-5" />}
+          label="Home"
+          isActive={pathname === '/'}
+        />
+        <NavItem
+          href="/chat"
+          icon={<Chat className="h-5 w-5" />}
+          label="Chat"
+          isActive={pathname.startsWith('/chat')}
+        />
+        <NavItem
+          href="/storage"
+          icon={<Database className="h-5 w-5" />}
+          label="Storage"
+          isActive={pathname.startsWith('/storage')}
+        />
+        <NavItem
+          href="/knowledge"
+          icon={<FileText className="h-5 w-5" />}
+          label="Knowledge"
+          isActive={pathname.startsWith('/knowledge')}
+        />
       </div>
-    </nav>
+      <div className="space-y-4">
+        <ThemeToggle />
+        <NavItem
+          href="/settings"
+          icon={<Settings className="h-5 w-5" />}
+          label="Settings"
+          isActive={pathname.startsWith('/settings')}
+        />
+      </div>
+    </aside>
   );
 }

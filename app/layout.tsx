@@ -6,6 +6,9 @@ import { Toaster } from '@/components/ui/toaster';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from '@/components/ErrorFallback';
 import { Navigation } from '@/components/ui/navigation';
+import { ThemeProvider } from '@/lib/theme/ThemeProvider';
+import { ApolloWrapper } from '@/lib/apollo/ApolloWrapper';
+import { URQLProvider } from '@/lib/urql/URQLProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,11 +27,17 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Theme appearance="light" accentColor="blue" radius="medium">
-            <Navigation />
-            <main className="pl-16">{children}</main>
-            <Toaster />
-          </Theme>
+          <ThemeProvider>
+            <URQLProvider>
+              <ApolloWrapper>
+                <Theme appearance="light" accentColor="blue" radius="medium">
+                  <Navigation />
+                  <main className="pl-16">{children}</main>
+                  <Toaster />
+                </Theme>
+              </ApolloWrapper>
+            </URQLProvider>
+          </ThemeProvider>
         </ErrorBoundary>
       </body>
     </html>

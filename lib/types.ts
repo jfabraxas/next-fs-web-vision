@@ -17,6 +17,8 @@ export interface FileSystemEntry {
   lastModified?: number;
 }
 
+export type KnowledgeItemCategory = 'pdf' | 'git' | 'image' | 'document' | 'webpage' | 'code' | 'other';
+
 export interface KnowledgeBase {
   id: string;
   name: string;
@@ -24,4 +26,23 @@ export interface KnowledgeBase {
   files: string[];
   createdAt: number;
   updatedAt: number;
+  category?: KnowledgeItemCategory;
+  tags?: string[];
+}
+
+export interface AIModel {
+  id: string;
+  name: string;
+  description: string;
+  type: ModelType;
+  version: string;
+  parameters: number;
+  capabilities: string[];
+  limitations: string[];
+  contextLength: number;
+  imageSize?: string;
+  thumbnailUrl: string;
+  detailsUrl?: string;
+  isDefault?: boolean;
+  isEnabled: boolean;
 }
